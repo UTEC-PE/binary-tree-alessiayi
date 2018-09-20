@@ -3,9 +3,9 @@
 using namespace std;
 
 struct Node{
-  string data;
+  int data;
   Node* left;
   Node* right;
 
-  Node(string value) : data(value), left(nullptr), right(nullptr){};
+  Node(int value) : data(value), left(nullptr), right(nullptr){};
 };
