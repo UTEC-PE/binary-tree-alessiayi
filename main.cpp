@@ -5,13 +5,15 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
   tree Tree;
-  int count=0;
-  int num;
-  while (count < 10){
-    cin >> num;
-    Tree.constructTree(num);
-    count+=1;
-  }
 
+  Tree.constructTree(3);
+  Tree.constructTree(10);
+  Tree.constructTree(7);
+  Tree.constructTree(2);
+  Tree.constructTree(0);
+  Tree.constructTree(6);
+  Tree.constructTree(14);
+
+  Tree.printTree();
   return 0;
 }
