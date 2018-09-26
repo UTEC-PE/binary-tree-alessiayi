@@ -1,11 +1,9 @@
-#include <string>
 
-using namespace std;
-
+template<typename T>
 struct Node{
   int data;
-  Node* left;
-  Node* right;
+  Node<T>* left;
+  Node<T>* right;
 
   Node(int value) : data(value), left(nullptr), right(nullptr){};
 };
