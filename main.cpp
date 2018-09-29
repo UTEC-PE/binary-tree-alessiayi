@@ -6,26 +6,36 @@ using namespace std;
 int main(int argc, char const *argv[]) {
   tree<int> Tree;
 
-  Tree.constructTree(10);
-  Tree.constructTree(7);
-  Tree.constructTree(2);
-  Tree.constructTree(0);
-  Tree.constructTree(12);
-  Tree.constructTree(6);
-  Tree.constructTree(14);
-  Tree.constructTree(11);
+  Tree.insert(10);
+  Tree.insert(7);
+  Tree.insert(2);
+  Tree.insert(12);
+  Tree.insert(1);
+  Tree.insert(14);
+  Tree.insert(11);
+  Tree.insert(13);
 
   Tree.printTree();
+
+  cout << "Peso: " << Tree.weight() << endl;
+
+  Tree.remove(7);
+
   cout << "Inorder: ";
   Tree.printInorderReal();
-  cout << endl;
   cout << "Posorder: ";
   Tree.printPosorderReal();
-  cout << endl;
   cout << "Preorder: ";
   Tree.printPreorderReal();
-  cout << endl;
 
+  Tree.printTree();
+
+  cout << "Peso: " << Tree.weight() << endl;
+
+  Iterator<int> It=new Iterator<int>(Tree.begin());
+  for (int i=0; i<Tree.weight(); i++){
+    ++It;
+  }
 
   return 0;
 }

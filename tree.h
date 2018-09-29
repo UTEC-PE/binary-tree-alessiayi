@@ -1,6 +1,5 @@
-
-#include "iterator.h"
 #include <sstream>
+#include "iterator.h"
 
 using namespace std;
 
@@ -9,9 +8,11 @@ class tree{
   private:
       Node<T>* root;
       Node<T>* current;
+      Node<T>* move;
+      int count;
 
   public:
-  tree():root(nullptr),current(nullptr){};
+  tree():root(nullptr),current(nullptr), move(nullptr){};
 
   #define COUNT 10
   void print2DUtil(Node<T> *root, int space){
@@ -38,11 +39,12 @@ class tree{
     print2D(root);
   }
 
-  void constructTree(T num){
+  void insert(T num){
     //izquierda, menor
     //derecha, mayor
     if (!root){
-      current=root=new Node<T>(num);
+      current=root=move=new Node<T>(num);
+      count+=1;
       return;
     }
     Node<T>* to = new Node<T>(num);
@@ -52,55 +54,95 @@ class tree{
     else if (current -> data > num){
       if (current -> left){
         current=current->left;
-        constructTree(num);
+        insert(num);
       }
       else{
         current -> left=to;
+        count++;
         current=root;
       }
     }
     else{
       if (current -> right){
         current=current -> right;
-        constructTree(num);
+        insert(num);
       }
       else{
         current -> right=to;
+        count++;
         current=root;
       }
     }
   }
 
-  void swap(Node<T>* num, Node<T>* del){
-
+  void swapValues(Node<T>* num, Node<T>* del){
+    T aux = del->data;
+    del->data = num->data;
+    num->data = aux;
   }
 
-  void removeTree(T num){
-    //0 hijos, se elimina
-    //1 hijos, se cambia con el hijo y se elimina
-    //2 hijos, se encuentra el siguiente mayor, se cambia y se elimina
-    if (current -> data==num){
-      if (!num -> left && !num -> right){
-
-      }
-      else if (num -> left && !num -> right){
-
-      }
-      else if (!num -> left && num -> right){
-
-      }
-      else{
-
-      }
-      return;
-    }
-    else if (current -> data > num){
-      current=current->left;
-      removeTree(num);
+  bool isLeaf(Node<T>* tmp){
+    if (tmp -> left || tmp -> right){
+      return false;
     }
     else{
-      current=current -> right;
-      removeTree(num);
+      return true;
+    }
+  }
+
+  void find(T num){
+    if (move -> data==num){
+      return;
+    }
+    else if (move -> data > num){
+      move=move->left;
+      find(num);
+    }
+    else{
+      move=move -> right;
+      find(num);
+    }
+  }
+
+  void remove(T num){
+    if (!root){
+      cout << "Vacio";
+      return;
+    }
+    find(num);
+    if (current -> right==move || current -> left==move){
+      if (move -> left && !move -> right){
+        current -> left=move -> left;
+        count-=1;
+      }
+      else if (!move -> left && move -> right){
+        current -> right=move -> right;
+        count--;
+      }
+      else if (isLeaf(move)){
+          if (current -> right){
+            current -> right=nullptr;
+          }
+          else{
+            current -> left=nullptr;
+          }
+          count--;
+      }
+      else{
+        cout << "NU";
+        count--;
+      }
+      current=root;
+    }
+    else{
+      if (current -> data > num){
+        current=current -> left;
+        remove(num);
+      }
+      else{
+        current=current -> right;
+        remove(num);
+      }
     }
   }
 
@@ -153,6 +195,14 @@ class tree{
 
   void printPreorderReal(){
     printPreorder(current);
+  }
+
+  int weight(){
+    return count;
+  }
+
+  Node<T>* begin(){
+    return current;
   }
 
 };
