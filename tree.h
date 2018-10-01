@@ -12,7 +12,7 @@ class tree{
       int count;
 
   public:
-  tree():root(nullptr),current(nullptr), move(nullptr){};
+  tree():root(nullptr),current(nullptr), move(nullptr), count(0){};
 
   #define COUNT 10
   void print2DUtil(Node<T> *root, int space){
@@ -104,33 +104,73 @@ class tree{
     }
   }
 
+  void leftest(){
+    if (move -> left){
+      move=move -> left;
+      leftest();
+    }
+    else if (isLeaf(current)){
+      return;
+    }
+    else if (current -> left){
+      if (current -> left==move){
+        return;
+      }
+    }
+    else{
+      current=current -> left;
+    }
+  }
+
   void remove(T num){
     if (!root){
       cout << "Vacio";
       return;
     }
     find(num);
-    if (current -> right==move || current -> left==move){
+    if (root==move){
+      current=move=move -> right;
+      leftest();
+      swapValues(root, move);
+      remove(num);
+    }
+    else if (current -> right==move || current -> left==move){
       if (move -> left && !move -> right){
         current -> left=move -> left;
-        count-=1;
+        move=root;
+        count--;
       }
       else if (!move -> left && move -> right){
         current -> right=move -> right;
+        move=root;
         count--;
       }
       else if (isLeaf(move)){
           if (current -> right){
-            current -> right=nullptr;
+            if (current -> right==move){
+              current -> right=nullptr;
+            }
+            else{
+              current -> left=nullptr;
+            }
           }
           else{
+
             current -> left=nullptr;
           }
+          move=root;
           count--;
       }
       else{
-        cout << "NU";
-        count--;
+        Node<T>* tmp=move;
+        if (!isLeaf(move -> right)){
+          current=move -> right;
+        }
+        move=move -> right;
+        leftest();
+        swapValues(move, tmp);
+        find(num);
+        remove(num);
       }
       current=root;
     }
@@ -202,7 +242,13 @@ class tree{
   }
 
   Node<T>* begin(){
-    return current;
+    return root;
+  }
+
+  void printNodes(){
+    cout << "Root: " << root -> data << endl;
+    cout << "Current: " << current -> data << endl;
+    cout << "Move: " << move -> data << endl;
   }
 
 };
