@@ -49,7 +49,8 @@ class tree{
     }
     Node<T>* to = new Node<T>(num);
     if (current -> data==num){
-      throw "Ya existe";
+      //throw "Ya existe";
+      return;
     }
     else if (current -> data > num){
       if (current -> left){
@@ -241,7 +242,7 @@ class tree{
     return count;
   }
 
-  Node<T>* begin(){
+  Node<T>* begin(){ // Así no se implementa un iterador
     return root;
   }
 

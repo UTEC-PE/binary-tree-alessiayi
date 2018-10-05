@@ -1,54 +1,111 @@
 #include <iostream>
+#include <algorithm>    
+#include <vector>
+#include <random>
+#include <assert.h>
+
 #include "tree.h"
 
 using namespace std;
 
-int main(int argc, char const *argv[]) {
-  tree<int> Tree;
+#define RANGE_MIN 100
+#define RANGE_MAX 500
+#define MIN_NUMBER 0
+#define MAX_NUMBER 500
 
-  Tree.insert(9);
-  Tree.insert(20);
-  Tree.insert(19);
-  Tree.insert(7);
-  Tree.insert(2);
-  Tree.insert(28);
-  Tree.insert(8);
-  Tree.insert(1);
-  Tree.insert(13);
+mt19937 rng;
+vector<int> helper;
 
-  Tree.printTree();
+int generateRandomInt(int min, int max);
+void insertIntoTree(tree<int> &tester);
+void removeFromTree(tree<int> &tester);
+void sortAndPruneHelper();
+bool testTreeCompletion(tree<int>* tester);
+void print(tree<int>* tester);
 
-  cout << "Peso: " << Tree.weight() << endl;
+int main(int argc, char *argv[]) {
+    rng.seed(random_device()());
+    cout << "===========================================================" << endl;
+    cout << "\tBinary Tree Practice" << endl;
+    cout << "===========================================================" << endl << endl;
 
-  cout << "Inorder: ";
-  Tree.printInorderReal();
-  cout << "Posorder: ";
-  Tree.printPosorderReal();
-  cout << "Preorder: ";
-  Tree.printPreorderReal();
-  cout << endl;
+    tree<int> tester;
+    const int numberOfElements = generateRandomInt(RANGE_MIN, RANGE_MAX);
+    for (int i = 0; i < numberOfElements; i++) {
+        insertIntoTree(tester);
+    }
+    sortAndPruneHelper();
 
-  Tree.remove(20);
-  Tree.remove(7);
+    // Tu insert no está funcionando bien
+    assert(tester.weight() == helper.size() && "Something is wrong with the insert or weight method");
 
-  Tree.printTree();
+    /*assert(testTreeCompletion(&tester) && "Something is wrong with the insert method or the iterator");
 
-  cout << "Peso: " << Tree.weight() << endl;
+    const int elementsToRemove = generateRandomInt(0, helper.size() - 1);
+    for (int i = 0; i < elementsToRemove; i++) {
+        removeFromTree(tester);
+    }
 
-  cout << "Inorder: ";
-  Tree.printInorderReal();
-  cout << "Posorder: ";
-  Tree.printPosorderReal();
-  cout << "Preorder: ";
-  Tree.printPreorderReal();
-  cout << endl;
+    assert(testTreeCompletion(&tester) && "Something is wrong with the remove method or the iterator");*/
 
-  Iterator<int> It=Tree.begin();
+    print(&tester);
 
-  cout << *It << " ";
-  for (int i=0; i<Tree.weight()-1; i++){
-    cout << *++It << " ";
+    return EXIT_SUCCESS;
+}
+
+int generateRandomInt(int min, int max) {
+    uniform_int_distribution<mt19937::result_type> distribution(min, max);
+    return distribution(rng);
+}
+
+void insertIntoTree(tree<int> &tester) {
+    const int numberToInsert = generateRandomInt(MIN_NUMBER, MAX_NUMBER);
+    helper.push_back(numberToInsert);
+    tester.insert(numberToInsert);
+}
+
+void removeFromTree(tree<int> &tester) {
+    const int positionToRemove = generateRandomInt(0, helper.size() - 1);
+    const int element = helper.at(positionToRemove);
+    helper.erase(helper.begin() + positionToRemove);
+    tester.remove(element);
+}
+
+void sortAndPruneHelper() {
+    sort(helper.begin(), helper.end());
+    auto last = std::unique(helper.begin(), helper.end());
+    helper.erase(last, helper.end()); 
+}
+
+bool testTreeCompletion(tree<int>* tester) {
+    int i = 0;
+    /*for (Iterator<int> it = tester->begin(); it != tester->end(); ++it) {
+        if (*it != helper.at(i)) {
+            return false;
+        }
+        i++;
+    }*/
+  Iterator<int> It(tester->begin());
+
+  for (int i=0; i<tester->weight()-1; i++){
+      if (*It != helper.at(i)) {
+            return false;
+        }
+        ++It;
   }
 
-  return 0;
+    return true;
+}
+
+void print(tree<int>* tester) {
+     Iterator<int> It(tester->begin());
+     for (int i=0; i<tester->weight()-1; i++){
+        cout << *It << " ";
+    }
+    cout << endl << endl;
+
+    for (int i = 0; i < helper.size(); i++) {
+        cout << helper.at(i) << " ";
+    }
+    cout << endl;
 }
