@@ -13,7 +13,7 @@ class tree{
 
   public:
   tree():root(nullptr),current(nullptr), move(nullptr), count(0){};
-
+// Falta el destructor
   #define COUNT 10
   void print2DUtil(Node<T> *root, int space){
     if (root == NULL)
